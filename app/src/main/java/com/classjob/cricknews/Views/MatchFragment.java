@@ -1,9 +1,11 @@
 package com.classjob.cricknews.Views;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -34,7 +36,7 @@ public class MatchFragment extends Fragment {
     private RecyclerAdapter adapter;
     private List<Matches> matchesList;
     private ApiService apiService;
-
+    ProgressBar progressBar;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -75,6 +77,7 @@ public class MatchFragment extends Fragment {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,7 +88,7 @@ public class MatchFragment extends Fragment {
         // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        progressBar = view.findViewById(R.id.progress_bar);
         // Initialize data source
         matchesList = new ArrayList<>();
 
@@ -98,41 +101,47 @@ public class MatchFragment extends Fragment {
 
         // Fetch data from the server
         fetchMatchData();
-       // adapter.notifyDataSetChanged();
+        // adapter.notifyDataSetChanged();
         return view;
     }
 
     private void fetchMatchData() {
 
-       Call call= apiService.getAllMatches();
-       call.enqueue(new Callback() {
-           @Override
-           public void onResponse(Call call, Response response) {
-               if (response.isSuccessful() && response.body() != null) {
-                   List<Matches> newMatchesList = (List<Matches>) response.body();
+        Call call = apiService.getAllMatches();
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful() && response.body() != null) {
 
-                   // Clear existing data and add the new data
-                   matchesList.clear();
-                   matchesList.addAll(newMatchesList);
 
-                   // Notify the adapter of the data change
-                   adapter.notifyDataSetChanged();
-               }
-           }
+                    // Hide the progress bar
 
-           @Override
-           public void onFailure(Call call, Throwable t) {
-               AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-               builder.setTitle("Error");
+                    progressBar.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    List<Matches> newMatchesList = (List<Matches>) response.body();
 
-               builder.setMessage("failed to fetchdata"+t.getLocalizedMessage());
-               builder.setPositiveButton("Ok", (dialog, which) -> {
-                   dialog.dismiss();
-               });
-               builder.show();
-               Toast.makeText(getContext(), "something went wrong failed to fetchdata"+t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-           }
-       });
+                    // Clear existing data and add the new data
+                    matchesList.clear();
+                    matchesList.addAll(newMatchesList);
+
+                    // Notify the adapter of the data change
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Error");
+
+                builder.setMessage("failed to fetchdata" + t.getLocalizedMessage());
+                builder.setPositiveButton("Ok", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+                builder.show();
+                Toast.makeText(getContext(), "something went wrong failed to fetchdata" + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
