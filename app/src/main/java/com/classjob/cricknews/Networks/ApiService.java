@@ -1,6 +1,7 @@
 package com.classjob.cricknews.Networks;
 
 import com.classjob.cricknews.Networks.Model.Matches;
+import com.classjob.cricknews.Networks.Model.Table;
 
 import java.util.List;
 
@@ -11,4 +12,7 @@ public interface ApiService {
 
     @GET("matches.php")
     Call<List<Matches>> getAllMatches();
+
+    @GET("stats.php")
+    Call<List<Table>> getAllStats();
 }
