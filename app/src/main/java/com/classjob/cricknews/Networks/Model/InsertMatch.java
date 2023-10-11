@@ -1,4 +1,4 @@
-package com.classjob.cricknews.Networks.Response;
+package com.classjob.cricknews.Networks.Model;
 
 class InsertMatch {
     private String message;

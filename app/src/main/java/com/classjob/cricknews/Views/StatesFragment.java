@@ -1,14 +1,25 @@
 package com.classjob.cricknews.Views;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
+import com.classjob.cricknews.Networks.ApiClient2;
+import com.classjob.cricknews.Networks.ApiService;
+import com.classjob.cricknews.Networks.Model.CricketMatch;
 import com.classjob.cricknews.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +27,9 @@ import com.classjob.cricknews.R;
  * create an instance of this fragment.
  */
 public class StatesFragment extends Fragment {
+
+    private ApiService apiService;
+    TextView matchTitle, teamOneScore, teamTwoScore, updateMesssege;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,10 +71,65 @@ public class StatesFragment extends Fragment {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_states, container, false);
+        View view = inflater.inflate(R.layout.fragment_states, container, false);
+        //TODO: code;
+        matchTitle = view.findViewById(R.id.titlemathc);
+        teamOneScore = view.findViewById(R.id.teamone);
+        teamTwoScore = view.findViewById(R.id.teamtwo);
+        updateMesssege = view.findViewById(R.id.scoreUpdate);
+
+
+        // Initialize Retrofit service
+        apiService = ApiClient2.getClient().create(ApiService.class);
+
+        // Make the API call
+        fetchCricketMatchData();
+
+        return view;
     }
+
+    private void fetchCricketMatchData() {
+
+
+        Call<CricketMatch> call = apiService.getCricketMatch();
+
+        call.enqueue(new Callback<CricketMatch>() {
+            @Override
+            public void onResponse(Call<CricketMatch> call, Response<CricketMatch> response) {
+                if (response.isSuccessful()) {
+                    CricketMatch cricketMatch = response.body();
+                    Log.d("balcahl", cricketMatch.isSuccess() + "");
+
+                    updateMesssege.setText(cricketMatch.getLiveScore().getUpdate());
+                    // Handle the parsed data here
+                } else {
+                    Toast.makeText(getContext(), "something worng" + response, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CricketMatch> call, Throwable t) {
+                // Handle network errors here
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Error");
+
+                builder.setMessage("failed to fetchdata" + t.getLocalizedMessage());
+                builder.setPositiveButton("Ok", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+                builder.show();
+                Toast.makeText(getContext(), "something went wrong failed to fetchdata" + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+
+
+                Toast.makeText(getContext(), "eroro" + t.getLocalizedMessage() + " " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
 }
