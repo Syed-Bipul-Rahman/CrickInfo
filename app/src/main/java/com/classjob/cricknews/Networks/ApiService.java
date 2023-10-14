@@ -1,7 +1,7 @@
 package com.classjob.cricknews.Networks;
 
 import com.classjob.cricknews.Networks.Model.CricketMatch;
-import com.classjob.cricknews.Networks.Model.LiveScore;
+import com.classjob.cricknews.Networks.Model.LiveUrl;
 import com.classjob.cricknews.Networks.Model.Matches;
 import com.classjob.cricknews.Networks.Model.Table;
 
@@ -16,11 +16,14 @@ public interface ApiService {
     @GET("matches.php")
     Call<List<Matches>> getAllMatches();
 
+    @GET("researchBySyedBipul/json.php")
+    Call<LiveUrl> getLiveUrl();
+
     @GET("stats.php")
     Call<List<Table>> getAllStats();
 
-    @GET("cri.php?url=https://www.cricbuzz.com/live-cricket-scores/75458/")
-    Call<CricketMatch> getCricketMatch();
+    @GET()
+    Call<CricketMatch> getCricketMatch(@Url String url);
 
 
 }

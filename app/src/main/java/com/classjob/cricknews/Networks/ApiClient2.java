@@ -19,7 +19,7 @@ public class ApiClient2 {
                     .create();
 
             RETROFIT = new Retrofit.Builder()
-                    .baseUrl("https://apiholder.000webhostapp.com/crickinfo/live/")
+                    .baseUrl("http://apiholder.whf.bz/crickbuzz/cri-deploy/")
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson)).build();
         }

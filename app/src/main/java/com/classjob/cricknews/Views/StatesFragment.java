@@ -27,7 +27,7 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class StatesFragment extends Fragment {
-
+    String liveUrl;
     private ApiService apiService;
     TextView matchTitle, teamOneScore, teamTwoScore, updateMesssege;
 
@@ -87,8 +87,25 @@ public class StatesFragment extends Fragment {
         // Initialize Retrofit service
         apiService = ApiClient2.getClient().create(ApiService.class);
 
-        // Make the API call
+
+//        Call<LiveUrl> cal1 = apiService.getLiveUrl();
+//        cal1.enqueue(new Callback<LiveUrl>() {
+//            @Override
+//            public void onResponse(Call<LiveUrl> call, Response<LiveUrl> response) {
+//                liveUrl = response.body().getLink();
+//                fetchCricketMatchData();
+//                Toast.makeText(getContext(), "url found" + response.body().getLink(), Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<LiveUrl> call, Throwable t) {
+//
+//
+//            }
+//        });
+
         fetchCricketMatchData();
+
 
         return view;
     }
@@ -96,7 +113,7 @@ public class StatesFragment extends Fragment {
     private void fetchCricketMatchData() {
 
 
-        Call<CricketMatch> call = apiService.getCricketMatch();
+        Call<CricketMatch> call = apiService.getCricketMatch("cri.php?url=https://www.cricbuzz.com/live-cricket-scores/75476/");
 
         call.enqueue(new Callback<CricketMatch>() {
             @Override
@@ -106,9 +123,23 @@ public class StatesFragment extends Fragment {
                     Log.d("balcahl", cricketMatch.isSuccess() + "");
 
                     updateMesssege.setText(cricketMatch.getLiveScore().getUpdate());
+                    matchTitle.setText(cricketMatch.getLiveScore().getTitle());
+                    teamOneScore.setText(cricketMatch.getLiveScore().getBallsfaced());
+                    teamTwoScore.setText(cricketMatch.getLiveScore().getBatsman());
+
                     // Handle the parsed data here
                 } else {
-                    Toast.makeText(getContext(), "something worng" + response, Toast.LENGTH_SHORT).show();
+
+                    // Handle network errors here
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Error");
+
+                    builder.setMessage("failed to fetchdata" + response);
+                    builder.setPositiveButton("Ok", (dialog, which) -> {
+                        dialog.dismiss();
+                    });
+                    builder.show();
+                    // Toast.makeText(getContext(), "something worng" + response, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -123,7 +154,7 @@ public class StatesFragment extends Fragment {
                     dialog.dismiss();
                 });
                 builder.show();
-                Toast.makeText(getContext(), "something went wrong failed to fetchdata" + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getContext(), "something went wrong failed to fetchdata" + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
 
 
                 Toast.makeText(getContext(), "eroro" + t.getLocalizedMessage() + " " + t.getMessage(), Toast.LENGTH_LONG).show();

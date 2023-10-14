@@ -10,5 +10,7 @@
     <color name="gray">#B2B0B0</color>
     <color name="colorAccent">#009688</color>
     <color name="red">#E70909</color>
+    <color name="tomatored">#FF0932</color>
+    <color name="orangedark">#F14611</color>
     <color name="tabColor" type="color">#0074b3</color>
 </resources>

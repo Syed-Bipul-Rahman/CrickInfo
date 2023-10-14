@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/matchresult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="BAN won by 99 runs"
+        android:textColor="@color/black"
+        android:textSize="19sp"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:orientation="horizontal"
+       android:layout_height="wrap_content">
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:orientation="vertical">
+
+           <LinearLayout
+               android:gravity="center"
+               android:layout_margin="5dp"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:layout_weight="1"
+               android:orientation="vertical">
+
+               <ImageView
+                   android:id="@+id/wincountryflag"
+                   android:layout_width="60dp"
+                   android:layout_height="40dp"
+                   android:layout_gravity="center"
+                   android:scaleType="centerCrop"
+                   android:src="@drawable/bangladeshiflag" />
+
+               <TextView
+                   android:id="@+id/wincountryname"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:text="Bangladesh"
+                   android:textColor="@color/black"
+                   android:textSize="20sp" />
+
+               <TextView
+                   android:id="@+id/winerRun"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:gravity="center"
+                   android:text="286(49)"
+                   android:textColor="@color/black"
+                   android:textSize="20sp" />
+           </LinearLayout>
+
+
+       </LinearLayout>
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:gravity="center"
+           android:layout_weight="1"
+           android:orientation="vertical">
+
+           <TextView
+               android:id="@+id/matchname"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:text="Match 2"
+               android:textStyle="bold"
+               android:textColor="@color/tomatored"
+               android:textSize="25sp" />
+
+           <TextView
+
+               android:id="@+id/matchdate"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:text="Oct 8"
+               android:textStyle="bold"
+               android:textColor="@color/orangedark"
+               android:textSize="17sp" />
+       </LinearLayout>
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:layout_gravity="center"
+           android:gravity="center"
+           android:orientation="vertical">
+
+           <LinearLayout
+               android:gravity="center"
+               android:layout_margin="5dp"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:layout_weight="1"
+               android:orientation="vertical">
+
+               <ImageView
+                   android:id="@+id/losscountryflag"
+                   android:layout_width="60dp"
+                   android:layout_height="40dp"
+                   android:layout_gravity="center"
+                   android:scaleType="centerCrop"
+                   android:src="@drawable/indiaflag" />
+
+               <TextView
+                   android:id="@+id/losscountryname"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:text="India"
+                   android:textColor="@color/black"
+                   android:textSize="20sp" />
+
+               <TextView
+                   android:id="@+id/lossRun"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:gravity="center"
+                   android:text="200(30)"
+                   android:textColor="@color/black"
+                   android:textSize="20sp" />
+           </LinearLayout>
+
+
+       </LinearLayout>
+
+   </LinearLayout>
+
+
+</LinearLayout>
