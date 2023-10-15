@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.classjob.cricknews.Networks.ApiClient2;
 import com.classjob.cricknews.Networks.ApiService;
 import com.classjob.cricknews.Networks.Model.CricketMatch;
+import com.classjob.cricknews.Networks.Model.LiveUrl;
 import com.classjob.cricknews.R;
 
 import retrofit2.Call;
@@ -95,42 +96,42 @@ public class StatesFragment extends Fragment {
         apiService = ApiClient2.getClient().create(ApiService.class);
 
 
-//        Call<LiveUrl> cal1 = apiService.getLiveUrl();
-//        cal1.enqueue(new Callback<LiveUrl>() {
-//            @Override
-//            public void onResponse(Call<LiveUrl> call, Response<LiveUrl> response) {
-//                liveUrl = response.body().getLink();
-//                fetchCricketMatchData();
-//                Toast.makeText(getContext(), "url found" + response.body().getLink(), Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LiveUrl> call, Throwable t) {
-//
-//
-//            }
-//        });
-
-        refreshRunnable = new Runnable() {
+        Call<LiveUrl> cal1 = apiService.getLiveUrl();
+        cal1.enqueue(new Callback<LiveUrl>() {
             @Override
-            public void run() {
-                // Refresh data
-                fetchCricketMatchData();
-                // Schedule the next refresh
-                handler.postDelayed(this, REFRESH_INTERVAL);
-            }
-        };
+            public void onResponse(Call<LiveUrl> call, Response<LiveUrl> response) {
+                liveUrl = response.body().getLink();
+                refreshRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        // Refresh data
+                        fetchCricketMatchData("cri.php?url=https://www.cricbuzz.com/"+liveUrl);
+                        // Schedule the next refresh
+                        handler.postDelayed(this, REFRESH_INTERVAL);
+                    }
+                };
 
-        // Start periodic data refresh
-        handler.post(refreshRunnable);
+                // Start periodic data refresh
+                handler.post(refreshRunnable);
+               // Toast.makeText(getContext(), "url found" + response.body().getLink(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<LiveUrl> call, Throwable t) {
+
+
+            }
+        });
+
+
 
         return view;
     }
 
-    private void fetchCricketMatchData() {
+    private void fetchCricketMatchData(String liveMatchURL) {
 
 
-        Call<CricketMatch> call = apiService.getCricketMatch("cri.php?url=https://www.cricbuzz.com/live-cricket-scores/75472/");
+        Call<CricketMatch> call = apiService.getCricketMatch(liveMatchURL);
 
         call.enqueue(new Callback<CricketMatch>() {
             @Override
@@ -166,15 +167,15 @@ public class StatesFragment extends Fragment {
                     // Handle the parsed data here
                 } else {
 
-                    // Handle network errors here
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Error");
-
-                    builder.setMessage("failed to fetchdata" + response);
-                    builder.setPositiveButton("Ok", (dialog, which) -> {
-                        dialog.dismiss();
-                    });
-                    builder.show();
+//                    // Handle network errors here
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//                    builder.setTitle("Error");
+//
+//                    builder.setMessage("failed to fetchdata" + response);
+//                    builder.setPositiveButton("Ok", (dialog, which) -> {
+//                        dialog.dismiss();
+//                    });
+//                    builder.show();
                     // Toast.makeText(getContext(), "something worng" + response, Toast.LENGTH_SHORT).show();
                 }
             }
