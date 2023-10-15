@@ -2,10 +2,12 @@ package com.classjob.cricknews.Views;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,8 +31,11 @@ import retrofit2.Response;
 public class StatesFragment extends Fragment {
     String liveUrl;
     private ApiService apiService;
-    TextView matchTitle, teamOneScore, teamTwoScore, updateMesssege;
-
+    TextView matchTitle, updateMesssege, currentposition, recentball;
+    LinearLayout showHideState;
+    private static final long REFRESH_INTERVAL = 10000;
+    private Handler handler = new Handler();
+    private Runnable refreshRunnable;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -79,9 +84,11 @@ public class StatesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_states, container, false);
         //TODO: code;
         matchTitle = view.findViewById(R.id.titlemathc);
-        teamOneScore = view.findViewById(R.id.teamone);
-        teamTwoScore = view.findViewById(R.id.teamtwo);
+
         updateMesssege = view.findViewById(R.id.scoreUpdate);
+        currentposition = view.findViewById(R.id.currentposition);
+        recentball = view.findViewById(R.id.recentballs);
+        showHideState = view.findViewById(R.id.linarShowState);
 
 
         // Initialize Retrofit service
@@ -104,8 +111,18 @@ public class StatesFragment extends Fragment {
 //            }
 //        });
 
-        fetchCricketMatchData();
+        refreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                // Refresh data
+                fetchCricketMatchData();
+                // Schedule the next refresh
+                handler.postDelayed(this, REFRESH_INTERVAL);
+            }
+        };
 
+        // Start periodic data refresh
+        handler.post(refreshRunnable);
 
         return view;
     }
@@ -113,7 +130,7 @@ public class StatesFragment extends Fragment {
     private void fetchCricketMatchData() {
 
 
-        Call<CricketMatch> call = apiService.getCricketMatch("cri.php?url=https://www.cricbuzz.com/live-cricket-scores/75476/");
+        Call<CricketMatch> call = apiService.getCricketMatch("cri.php?url=https://www.cricbuzz.com/live-cricket-scores/75472/");
 
         call.enqueue(new Callback<CricketMatch>() {
             @Override
@@ -123,9 +140,28 @@ public class StatesFragment extends Fragment {
                     Log.d("balcahl", cricketMatch.isSuccess() + "");
 
                     updateMesssege.setText(cricketMatch.getLiveScore().getUpdate());
-                    matchTitle.setText(cricketMatch.getLiveScore().getTitle());
-                    teamOneScore.setText(cricketMatch.getLiveScore().getBallsfaced());
-                    teamTwoScore.setText(cricketMatch.getLiveScore().getBatsman());
+
+
+                    String matchTitleget = cricketMatch.getLiveScore().getTitle();
+
+                    String[] split = matchTitleget.split(",");
+
+
+                    if (split.length >= 2) {
+                        String firstWord = split[0];
+
+                        matchTitle.setText(firstWord);
+                    } else {
+                        matchTitle.setText(matchTitleget);
+                    }
+
+                    if (response.body().getLiveScore().getCurrent().equals("Data Not Found") && response.body().getLiveScore().getRecentballs().equals("Data Not Found")) {
+
+                        showHideState.setVisibility(View.GONE);
+                    }else{
+                        recentball.setText(response.body().getLiveScore().getRecentballs());
+                        currentposition.setText(response.body().getLiveScore().getCurrent());
+                    }
 
                     // Handle the parsed data here
                 } else {
